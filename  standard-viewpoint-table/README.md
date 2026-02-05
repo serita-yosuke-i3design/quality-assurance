@@ -1,0 +1,54 @@
+# 標準観点表
+
+当社独自のテスト観点を整理したドキュメント群です。**機能ID・機能カテゴリ・web or アプリ**はディレクトリ構成で表現し、各ファイルには利用シーンに必要な**観点（機能 or 表示 以右の4列）**のみを掲載しています。
+
+## ディレクトリ構成
+
+- **パス**: `viewpoints/{機能ID}-{機能カテゴリ}/{共通|web|アプリ}.md`
+- **機能** = フォルダ名（例: `00-共通`, `01-ログイン`）
+- **web or アプリ** = ファイル名（`共通.md` / `web.md` / `アプリ.md`）。該当するプラットフォームの観点がある場合のみファイルが存在します。
+- 各ファイル内の表は **機能 or 表示** 以右の4列（テスト観点カテゴリ・テスト項目・確認内容）のみ。
+
+## 機能別一覧（viewpoints/）
+
+| 機能ID | フォルダ | 共通 | Web | アプリ |
+| --- | --- | --- | --- | --- |
+| 0 | [00-共通](viewpoints/00-共通) | [共通](viewpoints/00-共通/共通.md) | [web](viewpoints/00-共通/web.md) | [アプリ](viewpoints/00-共通/アプリ.md) |
+| 1 | [01-ログイン](viewpoints/01-ログイン) | [共通](viewpoints/01-ログイン/共通.md) | [web](viewpoints/01-ログイン/web.md) | [アプリ](viewpoints/01-ログイン/アプリ.md) |
+| 2 | [02-一覧表示](viewpoints/02-一覧表示) | [共通](viewpoints/02-一覧表示/共通.md) | [web](viewpoints/02-一覧表示/web.md) | [アプリ](viewpoints/02-一覧表示/アプリ.md) |
+| 3 | [03-検索・フィルタ](viewpoints/03-検索・フィルタ) | [共通](viewpoints/03-検索・フィルタ/共通.md) | - | - |
+| 4 | [04-登録・編集](viewpoints/04-登録・編集) | [共通](viewpoints/04-登録・編集/共通.md) | [web](viewpoints/04-登録・編集/web.md) | - |
+| 5 | [05-削除機能](viewpoints/05-削除機能) | [共通](viewpoints/05-削除機能/共通.md) | [web](viewpoints/05-削除機能/web.md) | - |
+| 6 | [06-詳細表示](viewpoints/06-詳細表示) | [共通](viewpoints/06-詳細表示/共通.md) | [web](viewpoints/06-詳細表示/web.md) | - |
+| 7 | [07-ボタン](viewpoints/07-ボタン) | [共通](viewpoints/07-ボタン/共通.md) | - | - |
+| 8 | [08-チェックボックス](viewpoints/08-チェックボックス) | [共通](viewpoints/08-チェックボックス/共通.md) | - | - |
+| 9 | [09-プルダウン](viewpoints/09-プルダウン) | [共通](viewpoints/09-プルダウン/共通.md) | [web](viewpoints/09-プルダウン/web.md) | - |
+| 10 | [10-モーダル](viewpoints/10-モーダル) | [共通](viewpoints/10-モーダル/共通.md) | [web](viewpoints/10-モーダル/web.md) | - |
+| 11 | [11-ファイルアップロード](viewpoints/11-ファイルアップロード) | [共通](viewpoints/11-ファイルアップロード/共通.md) | - | - |
+| 12 | [12-画像添付](viewpoints/12-画像添付) | [共通](viewpoints/12-画像添付/共通.md) | - | - |
+| 13 | [13-ダウンロード・出力](viewpoints/13-ダウンロード・出力) | [共通](viewpoints/13-ダウンロード・出力/共通.md) | - | [アプリ](viewpoints/13-ダウンロード・出力/アプリ.md) |
+| 14 | [14-エラーハンドリング](viewpoints/14-エラーハンドリング) | [共通](viewpoints/14-エラーハンドリング/共通.md) | [web](viewpoints/14-エラーハンドリング/web.md) | [アプリ](viewpoints/14-エラーハンドリング/アプリ.md) |
+| 15 | [15-画面遷移](viewpoints/15-画面遷移) | [共通](viewpoints/15-画面遷移/共通.md) | [web](viewpoints/15-画面遷移/web.md) | [アプリ](viewpoints/15-画面遷移/アプリ.md) |
+| 16 | [16-情報変更](viewpoints/16-情報変更) | [共通](viewpoints/16-情報変更/共通.md) | [web](viewpoints/16-情報変更/web.md) | [アプリ](viewpoints/16-情報変更/アプリ.md) |
+| 17 | [17-ワークフロー](viewpoints/17-ワークフロー) | [共通](viewpoints/17-ワークフロー/共通.md) | [web](viewpoints/17-ワークフロー/web.md) | [アプリ](viewpoints/17-ワークフロー/アプリ.md) |
+| 18 | [18-ラジオボタン](viewpoints/18-ラジオボタン) | [共通](viewpoints/18-ラジオボタン/共通.md) | [web](viewpoints/18-ラジオボタン/web.md) | [アプリ](viewpoints/18-ラジオボタン/アプリ.md) |
+| 19 | [19-テキストエリア](viewpoints/19-テキストエリア) | [共通](viewpoints/19-テキストエリア/共通.md) | [web](viewpoints/19-テキストエリア/web.md) | [アプリ](viewpoints/19-テキストエリア/アプリ.md) |
+| 20 | [20-日付選択](viewpoints/20-日付選択) | [共通](viewpoints/20-日付選択/共通.md) | [web](viewpoints/20-日付選択/web.md) | [アプリ](viewpoints/20-日付選択/アプリ.md) |
+| 21 | [21-タブ](viewpoints/21-タブ) | [共通](viewpoints/21-タブ/共通.md) | [web](viewpoints/21-タブ/web.md) | [アプリ](viewpoints/21-タブ/アプリ.md) |
+| 22 | [22-デザインツール](viewpoints/22-デザインツール) | - | [web](viewpoints/22-デザインツール/web.md) | - |
+
+## 編集履歴の記載
+
+**編集履歴は各ファイルの最下部**にあります。
+
+- **日付**: 反映日（YYYY-MM-DD）
+- **変更種別**: 追加 / 変更 / 削除
+- **対象観点（テスト項目）**: 追加・変更した観点名
+- **学び元プロジェクト（代表）**: その観点を得た代表的なプロジェクト名
+- **備考**: 経緯（本番障害、レビュー指摘など）
+
+観点を追加・変更したら、該当する機能・プラットフォームのファイルの「観点一覧」を更新し、**同じファイル末尾の編集履歴に1行追記**してください。
+
+## 統合参照用
+
+全観点を1ファイルで確認する場合は [標準観点表-統合版.md](標準観点表-統合版.md) を参照。
