@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KJ 結合テスト分析用 Issues — 欠陥分析レポート</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#0f1419; --panel:#151b23; --text:#e6edf3; --muted:#8b949e; --border:#30363d; --accent:#58a6ff;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", sans-serif; background:var(--bg); color:var(--text); line-height:1.55; }
+header { padding:1.5rem 1.25rem; border-bottom:1px solid var(--border); background:linear-gradient(180deg,#111821,#0f1419); }
+h1 { margin:0 0 .35rem; font-size:1.35rem; }
+h2 { margin:2rem 0 .75rem; font-size:1.1rem; color:#c9d1d9; border-bottom:1px solid var(--border); padding-bottom:.35rem; }
+h3 { margin:1rem 0 .5rem; font-size:.95rem; color:var(--accent); }
+h4 { margin:1.25rem 0 .5rem; font-size:.9rem; color:#8b949e; }
+main { max-width:1100px; margin:0 auto; padding:1rem 1.25rem 3rem; }
+#meta, #exec { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:1rem 1.1rem; margin:1rem 0; }
+#meta code { color:#79c0ff; }
+.chart-wrap { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:.75rem; margin:1rem 0; }
+.chart-wrap canvas { max-height:320px; }
+.sr-summary { font-size:.85rem; color:var(--muted); margin:.35rem 0 .75rem; }
+table.data { width:100%; border-collapse:collapse; font-size:.82rem; margin:1rem 0; display:block; max-height:480px; overflow:auto; }
+table.data thead { position:sticky; top:0; background:#1c2430; z-index:1; }
+table.data th, table.data td { border:1px solid var(--border); padding:.35rem .45rem; text-align:left; }
+table.data td { text-align:right; }
+table.data th:first-child, table.data td:first-child { text-align:left; position:sticky; left:0; background:#1c2430; }
+a { color:var(--accent); }
+.toc { font-size:.9rem; }
+.toc a { margin-right:.75rem; }
+.note { border-left:3px solid #d29922; padding:.5rem .75rem; background:#221c0f; color:#e3b341; font-size:.88rem; margin:1rem 0; }
+ul.tight li { margin:.25rem 0; }
+.ddp-legend { font-size:.82rem; color:var(--muted); margin:.75rem 0 1rem; display:flex; flex-wrap:wrap; gap:.75rem 1.25rem; align-items:center; }
+.ddp-legend span { display:inline-flex; align-items:center; gap:.35rem; }
+.ddp-swatch { width:14px; height:14px; border-radius:3px; border:1px solid var(--border); }
+table.ddp-matrix td, table.ddp-matrix th { text-align:center; min-width:2.5rem; }
+table.ddp-matrix th:first-child, table.ddp-matrix td:first-child { text-align:left; }
+.ddp-empty { color:#484f58; background:#0d1117; }
+.ddp-same { background:#1b4332; color:#d8f3dc; }
+.ddp-late-1 { background:#3d2f00; color:#ffe08a; }
+.ddp-late-2 { background:#5c3d00; color:#ffd; }
+.ddp-late-3 { background:#7a4a00; color:#fff; }
+.ddp-late-4 { background:#9c5c00; color:#fff; }
+.ddp-late-5 { background:#b86b00; color:#fff; }
+.ddp-late-6 { background:#d47800; color:#111; }
+.ddp-late-7 { background:#f08800; color:#111; }
+.ddp-inc { background:#3d1f4f; color:#e6d4ff; }
+.ddp-na { background:#21262d; color:#8b949e; }
+.ddp-marg { background:#161b22 !important; color:#c9d1d9; font-weight:600; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="top">KJ 結合テスト分析用 Issues — 欠陥分析レポート</h1>
+  <div class="toc">
+    <a href="#meta">メタ</a>
+    <a href="#exec">サマリー</a>
+    <a href="#charts">グラフ</a>
+    <a href="#ddp-cross">DDPクロス</a>
+    <a href="#tables">集計表</a>
+    <a href="#analysis">分析</a>
+    <a href="#extra">付加分析</a>
+    <a href="#ideas">参考改善案</a>
+  </div>
+</header>
+<main>
+<section id="meta">
+  <h2>メタ情報</h2>
+  <p>入力ファイル: <code>KJ_結合テスト_分析用_issues_全件_更新後 - KJ_結合テスト_分析用_issues_全件_更新後.csv</code>（.csv）</p>
+  <p>全行数: <b>337</b> / 欠陥対象: <b>275</b> / 非欠陥: <b>62</b></p>
+  <p>SHA-256: <code>d24497b2da8918e0501cc64976c96dd2199a1c275478bf2bf61e17ceb789e7b1</code></p>
+  <p>生成日: <b>2026-04-24</b></p>
+  <p class="note"><strong>DDP用の時系列（今回のテスト実施順）</strong>: ①デザインレビュー(0) → ②探索的テスト(1) → ③結合テスト(2)（データ上の「結合テストケース」「動作確認」も③に含める）→ ④UAT(3)。単体テスト・仕様/設計レビュー（「旧：仕様漏れ」正規化後含む）は①より上流として -1。ギャップは「検出インデックス &gt; 最短インデックス」で左シフト余地。逆転はラベル意味の確認。組織の正式定義と異なる場合はマップを差し替えよ。</p>
+</section>
+
+<section id="exec">
+  <h2>エグゼクティブサマリー</h2>
+  <p>欠陥レコードは <b>275件</b>（全体337件中、バグではない62件を除く）。<b>バグ分類</b>では「スタイル・レイアウト」が最多（63件）。<b>バグ発生理由</b>は「実装ミス」167件、「原因不明」60件、未記入（空欄）0件。<b>検出したテスト工程</b>は「探索的テスト」138件が中心、続いて「(空)」57件。<b>最短で検出できたテスト工程</b>は「結合テスト」172件が最多、次点「単体テスト」56件。DDP用の工程順は <strong>①デザインレビュー→②探索→③結合（結合テストケース・動作確認を含む）→④UAT</strong> とし、単体・仕様レビュー系は①より上流（インデックス-1）で比較。比較可能 211 件のうち <b>85件（40.3%）</b> は検出が最短より時系列で後ろ＝<strong>当該テストラインでの左シフト余地</strong>。検出工程空欄 <b>57件</b>、最短空欄 <b>0件</b>、理由空欄 <b>0件</b>。<b>Status</b> 完了236件・再テスト完了32件（11.6%）。</p>
+</section>
+
+<section id="charts">
+  <h2>可視化（Chart.js）</h2>
+  <p class="sr-summary">各図の下に要約。CDN不可時は集計表で同値を確認。</p>
+  <h3 id="c-bugcat">バグ分類（件数）</h3>
+  <div class="chart-wrap"><canvas id="chartBugcat"></canvas></div>
+  <p class="sr-summary">最多分類: スタイル・レイアウト（63件）。</p>
+  <h3 id="c-reason">バグ発生理由（件数）</h3>
+  <div class="chart-wrap"><canvas id="chartReason"></canvas></div>
+  <p class="sr-summary">空欄・実装ミス・仕様系の順で確認。</p>
+  <h3 id="c-det">検出したテスト工程</h3>
+  <div class="chart-wrap"><canvas id="chartDet"></canvas></div>
+  <p class="sr-summary">最多: 探索的テスト（138件）。</p>
+  <h3 id="c-short">最短で検出できたテスト工程</h3>
+  <div class="chart-wrap"><canvas id="chartShort"></canvas></div>
+  <p class="sr-summary">最多: 結合テスト（172件）。</p>
+  <h3 id="c-status">Status（欠陥のみ）</h3>
+  <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
+  <p class="sr-summary">完了・再テスト完了の比率。</p>
+  <h3 id="c-stack">積み上げ棒：バグ分類 × バグ発生理由</h3>
+  <div class="chart-wrap"><canvas id="chartStack"></canvas></div>
+  <p class="sr-summary">分類ごとの理由内訳。</p>
+</section>
+
+<section id="tables">
+  <h2>集計表</h2>
+  <h3 id="ddp-cross">DDPモニタリング: 最短 × 検出（欠陥のみ）</h3>
+  <p class="sr-summary">行＝最短、列＝検出。列は①→④の順（比較外は右端寄り）。</p>
+  <div class="ddp-legend">
+    <span><span class="ddp-swatch" style="background:#1b4332;"></span>同一フェーズ</span>
+    <span><span class="ddp-swatch" style="background:#7a4a00;"></span>検出が時系列で後（左シフト余地）</span>
+    <span><span class="ddp-swatch" style="background:#3d1f4f;"></span>最短の方が後（要確認）</span>
+    <span><span class="ddp-swatch" style="background:#21262d;"></span>比較不可</span>
+    <span><span class="ddp-swatch" style="background:#0d1117;"></span>0件</span>
+  </div>
+  <table class="data ddp-matrix"><tr><th>最短 \ 検出</th><th>デザインレビュー</th><th>探索的テスト</th><th>結合テストケース</th><th>UAT</th><th>(空)</th><th class="ddp-marg">行計</th></tr><tr><th>仕様/設計レビュー</th><td class="ddp-empty">0</td><td class="ddp-late ddp-late-2" title="左シフト余地: ①〜④の順で検出が2段下流（10件）"><b>10</b></td><td class="ddp-late ddp-late-3" title="左シフト余地: ①〜④の順で検出が3段下流（2件）"><b>2</b></td><td class="ddp-late ddp-late-4" title="左シフト余地: ①〜④の順で検出が4段下流（3件）"><b>3</b></td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>3</b></td><td class="ddp-marg"><b>18</b></td></tr><tr><th>単体テスト</th><td class="ddp-empty">0</td><td class="ddp-late ddp-late-2" title="左シフト余地: ①〜④の順で検出が2段下流（26件）"><b>26</b></td><td class="ddp-late ddp-late-3" title="左シフト余地: ①〜④の順で検出が3段下流（28件）"><b>28</b></td><td class="ddp-late ddp-late-4" title="左シフト余地: ①〜④の順で検出が4段下流（2件）"><b>2</b></td><td class="ddp-empty">0</td><td class="ddp-marg"><b>56</b></td></tr><tr><th>デザインレビュー</th><td class="ddp-same" title="同一フェーズで検出"><b>2</b></td><td class="ddp-empty">0</td><td class="ddp-empty">0</td><td class="ddp-empty">0</td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>5</b></td><td class="ddp-marg"><b>7</b></td></tr><tr><th>動作確認</th><td class="ddp-empty">0</td><td class="ddp-inc" title="最短が検出より時系列で後ろ（ラベル意味・記録の見直し候補）"><b>7</b></td><td class="ddp-same" title="同一フェーズで検出"><b>2</b></td><td class="ddp-late ddp-late-1" title="左シフト余地: ①〜④の順で検出が1段下流（1件）"><b>1</b></td><td class="ddp-empty">0</td><td class="ddp-marg"><b>10</b></td></tr><tr><th>結合テスト</th><td class="ddp-inc" title="最短が検出より時系列で後ろ（ラベル意味・記録の見直し候補）"><b>1</b></td><td class="ddp-inc" title="最短が検出より時系列で後ろ（ラベル意味・記録の見直し候補）"><b>91</b></td><td class="ddp-same" title="同一フェーズで検出"><b>18</b></td><td class="ddp-late ddp-late-1" title="左シフト余地: ①〜④の順で検出が1段下流（13件）"><b>13</b></td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>49</b></td><td class="ddp-marg"><b>172</b></td></tr><tr><th>UAT</th><td class="ddp-empty">0</td><td class="ddp-inc" title="最短が検出より時系列で後ろ（ラベル意味・記録の見直し候補）"><b>1</b></td><td class="ddp-empty">0</td><td class="ddp-same" title="同一フェーズで検出"><b>4</b></td><td class="ddp-empty">0</td><td class="ddp-marg"><b>5</b></td></tr><tr><th>バグではない</th><td class="ddp-empty">0</td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>1</b></td><td class="ddp-empty">0</td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>3</b></td><td class="ddp-empty">0</td><td class="ddp-marg"><b>4</b></td></tr><tr><th>検出不可</th><td class="ddp-empty">0</td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>2</b></td><td class="ddp-empty">0</td><td class="ddp-na" title="比較不可（空欄・検出不可・バグではない・未マップラベル等）"><b>1</b></td><td class="ddp-empty">0</td><td class="ddp-marg"><b>3</b></td></tr><tr><th class="ddp-marg">列計</th><td class="ddp-marg"><b>3</b></td><td class="ddp-marg"><b>138</b></td><td class="ddp-marg"><b>50</b></td><td class="ddp-marg"><b>27</b></td><td class="ddp-marg"><b>57</b></td><td class="ddp-marg"><b>275</b></td></tr></table>
+  <h4>左シフト余地が大きい組み合わせ（件数上位）</h4>
+  <p class="sr-summary">最短より検出が①〜④で後ろにあるセルから、件数多い順。</p>
+  <ol class="tight"><li><code>単体テスト</code> → 実際は <code>結合テストケース</code> で検出: <b>28</b>件</li><li><code>単体テスト</code> → 実際は <code>探索的テスト</code> で検出: <b>26</b>件</li><li><code>結合テスト</code> → 実際は <code>UAT</code> で検出: <b>13</b>件</li><li><code>仕様/設計レビュー</code> → 実際は <code>探索的テスト</code> で検出: <b>10</b>件</li><li><code>仕様/設計レビュー</code> → 実際は <code>UAT</code> で検出: <b>3</b>件</li><li><code>仕様/設計レビュー</code> → 実際は <code>結合テストケース</code> で検出: <b>2</b>件</li><li><code>単体テスト</code> → 実際は <code>UAT</code> で検出: <b>2</b>件</li><li><code>動作確認</code> → 実際は <code>UAT</code> で検出: <b>1</b>件</li></ol>
+
+  <h3>バグ分類 × バグ発生理由（欠陥のみ）</h3>
+  <table class="data"><tr><th>バグ分類 \ 理由</th><th>テスト不良</th><th>デザイン漏れ</th><th>仕様不良</th><th>仕様変更</th><th>仕様漏れ</th><th>原因不明</th><th>実装ミス</th><th>実装漏れ</th><th>調査/検証不足</th><th>計</th></tr><tr><th>スタイル・レイアウト</th><td>0</td><td>8</td><td>0</td><td>0</td><td>4</td><td>43</td><td>8</td><td>0</td><td>0</td><td><b>63</b></td></tr><tr><th>文字・文章</th><td>0</td><td>1</td><td>0</td><td>0</td><td>2</td><td>16</td><td>7</td><td>0</td><td>0</td><td><b>26</b></td></tr><tr><th>機能不良(その他)</th><td>0</td><td>0</td><td>0</td><td>0</td><td>4</td><td>0</td><td>17</td><td>2</td><td>0</td><td><b>23</b></td></tr><tr><th>バリデーション</th><td>0</td><td>1</td><td>1</td><td>0</td><td>2</td><td>0</td><td>16</td><td>1</td><td>0</td><td><b>21</b></td></tr><tr><th>画面遷移</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>20</td><td>0</td><td>0</td><td><b>20</b></td></tr><tr><th>入力フォーム</th><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>17</td><td>0</td><td>0</td><td><b>19</b></td></tr><tr><th>データ不整合</th><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>13</td><td>0</td><td>0</td><td><b>14</b></td></tr><tr><th>ファイル操作</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>12</td><td>0</td><td>0</td><td><b>12</b></td></tr><tr><th>表示項目制御</th><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>11</td><td>0</td><td>0</td><td><b>12</b></td></tr><tr><th>機能不良(デザインツール)</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>9</td><td>1</td><td>0</td><td><b>10</b></td></tr><tr><th>認証・認可</th><td>0</td><td>0</td><td>5</td><td>0</td><td>0</td><td>0</td><td>3</td><td>0</td><td>0</td><td><b>8</b></td></tr><tr><th>状態管理</th><td>0</td><td>0</td><td>3</td><td>0</td><td>0</td><td>0</td><td>5</td><td>0</td><td>0</td><td><b>8</b></td></tr><tr><th>通知</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>6</td><td>0</td><td>0</td><td><b>6</b></td></tr><tr><th>ユーザビリティ</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>6</td><td>0</td><td>0</td><td><b>6</b></td></tr><tr><th>エラーハンドリング</th><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>4</td><td>0</td><td>0</td><td><b>5</b></td></tr><tr><th>機能不良(決済)</th><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>3</td><td>0</td><td>0</td><td><b>5</b></td></tr><tr><th>外部接続</th><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td><td><b>4</b></td></tr><tr><th>データ保存・読込</th><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td><b>4</b></td></tr><tr><th>データ表示</th><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td><td><b>3</b></td></tr><tr><th>パフォーマンス</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>3</td><td>0</td><td>0</td><td><b>3</b></td></tr><tr><th>計算ロジック</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>2</td><td>0</td><td>0</td><td><b>2</b></td></tr><tr><th>ライブラリ依存不良</th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td><b>1</b></td></tr></table>
+
+  <h3>優先度 × 件数・上位バグ分類（欠陥のみ）</h3>
+  <table class="data">
+    <thead><tr><th>優先度</th><th>件数</th><th>上位バグ分類（最多5）</th></tr></thead>
+    <tbody><tr><td>(空)</td><td>10</td><td>画面遷移(3) / 文字・文章(3) / スタイル・レイアウト(2) / 機能不良(デザインツール)(1) / 機能不良(その他)(1)</td></tr><tr><td>blocker</td><td>2</td><td>外部接続(1) / データ不整合(1)</td></tr><tr><td>high</td><td>32</td><td>ファイル操作(5) / 認証・認可(4) / 状態管理(3) / データ保存・読込(3) / 外部接続(3)</td></tr><tr><td>low</td><td>122</td><td>スタイル・レイアウト(50) / 文字・文章(18) / バリデーション(13) / 画面遷移(10) / 入力フォーム(9)</td></tr><tr><td>medium</td><td>102</td><td>機能不良(その他)(14) / スタイル・レイアウト(11) / 表示項目制御(9) / データ不整合(8) / バリデーション(7)</td></tr><tr><td>pending</td><td>7</td><td>ユーザビリティ(2) / 入力フォーム(2) / データ不整合(1) / 文字・文章(1) / 機能不良(その他)(1)</td></tr></tbody>
+  </table>
+
+  <h3>検出遅延サマリ（上記時系列に基づく）</h3>
+  <table class="data">
+    <tbody>
+      <tr><th>同一フェーズで検出</th><td>26</td></tr>
+      <tr><th>検出が最短より時系列で後（左シフト余地）</th><td>85</td></tr>
+      <tr><th>最短が検出より後（定義・記録の見直し候補）</th><td>100</td></tr>
+      <tr><th>欠損・比較対象外</th><td>64</td></tr>
+    </tbody>
+  </table>
+  <p>最短が検出より後ろに見える例（最大5件）:</p>
+  <ul class="tight"><li>[ご注文内容確認] ご注文内容を確定ボタンを押下しても、GMO決済管理画面にデータが届いていない可能性がある — 検出:<code>探索的テスト</code> / 最短:<code>結合テスト</code></li><li>[パスワード再発行] 認証メールが未認証のメールアドレスも、パスワードの再発行ができてしまう — 検出:<code>探索的テスト</code> / 最短:<code>結合テスト</code></li><li>[ユーザー向けデザインツール] 編集ロックの挙動が正しくない — 検出:<code>探索的テスト</code> / 最短:<code>結合テスト</code></li><li>[EC・デザインツール] プリセット画像が消えてしまう — 検出:<code>探索的テスト</code> / 最短:<code>結合テスト</code></li><li>[EC: 新規作成] 古い認証メールにアクセスした後に新しい認証メールにアクセスするとエラーが出る — 検出:<code>探索的テスト</code> / 最短:<code>結合テスト</code></li></ul>
+</section>
+
+<section id="analysis">
+  <h2>分析本文</h2>
+  <h3>DDP／テスト工程（解釈）</h3>
+  <p>今回の実施順（①デザイン→②探索→③結合→④UAT）に合わせると、検出の中心「探索的テスト」と最短の中心「結合テスト」の関係は、<strong>③④で取りこぼした想定のものが②で多く見えている</strong>等の読み方ができる（示唆・因果は断定しない）。集計上の検出遅延 85件、最短と検出の順序が逆転している疑い 100件。</p>
+<p><a href="#ddp-cross">「最短×検出」クロス表</a>の列は、上記①〜④（および比較外）に沿って並べている。<strong>セルが右（より後の工程）に寄るほど、最短で止められなかった分が後工程に流れた</strong>イメージ（左シフトの検討ポイント）。</p>
+  <p>欠損 <b>64</b> 件は、検出・最短のいずれかが比較対象外または未マップ。</p>
+
+  <h3>バグ分類（弱点の読み）</h3>
+  <p>最多「スタイル・レイアウト」（63件）。続く分類: 文字・文章（26件）、機能不良(その他)（23件）、バリデーション（21件）、画面遷移（20件）、入力フォーム（19件） など。</p>
+  <p>「スタイル・レイアウト」63件規模のとき、受入基準とメタ記入が再テストと相関しやすい（参考）。理由未記入 0件。</p>
+
+  <h3>バグ発生理由と一般的開発との比較（定性）</h3>
+  <p>バグ発生理由の <b>0.0%</b>（0/275件）が空欄のため、原因別の解釈は<strong>メタデータ整備</strong>が先になりうる。記入がある範囲では実装ミス167件、仕様不良14件、実装漏れ4件など。</p><p>「原因不明」が60件あり、調査未完のシグナルになりうる（推測）。</p>
+  <p>メタ未記入が多いときは、業界比較以前に<strong>母数の歪み</strong>に注意（事実）。</p>
+
+  <h3>Status（リワーク）</h3>
+  <p><strong>再テスト完了</strong>32件（11.6%）。内訳: スタイル・レイアウトが7件、バリデーションが5件、機能不良(その他)が3件、文字・文章が3件。</p>
+</section>
+
+<section id="extra">
+  <h2>付加分析</h2>
+  <ul class="tight">
+    <li><b>優先度</b>: low 122 / medium 102 / high 32 / 空欄 10。</li>
+    <li><b>担当者</b>: 個人名集計は載せない。</li>
+    <li><b>UAT検出</b> 27 件。最短が③以前なのに④で初見のセルは、<strong>結合〜③の厚み・データ</strong>の見直し候補になりうる（参考）。</li>
+  </ul>
+</section>
+
+<section id="ideas">
+  <h2>参考: 改善アイディア（未検証）</h2>
+  <p class="note"><b>免責</b>: 要検証のうえ採用。</p>
+  <ul class="tight">
+    <li>起票テンプレで検出/最短を必須化し、本レポートの①〜④マップと整合させる。</li>
+    <li>DDPクロスで濃いセル（②で見えたのに③④まで流れた等）から結合ケースを逆引き補強する。</li>
+    <li>「旧：仕様漏れ」等を現行ラベルに統一する。</li>
+    <li>再テスト多発分類向けに受入基準テンプレを先出しする。</li>
+  </ul>
+</section>
+
+<footer style="margin-top:2rem;color:var(--muted);font-size:.82rem;">
+  <p>Skill: <code>issue-bug-analysis-ddp-html</code>。DDPは検出vs最短のギャップ分析。</p>
+</footer>
+</main>
+
+<script>
+const REPORT = {"charts": {"bugcat": {"labels": ["スタイル・レイアウト", "文字・文章", "機能不良(その他)", "バリデーション", "画面遷移", "入力フォーム", "データ不整合", "ファイル操作", "表示項目制御", "機能不良(デザインツール)", "認証・認可", "状態管理", "通知", "ユーザビリティ", "エラーハンドリング", "機能不良(決済)", "外部接続", "データ保存・読込", "データ表示", "パフォーマンス", "計算ロジック", "ライブラリ依存不良"], "data": [63, 26, 23, 21, 20, 19, 14, 12, 12, 10, 8, 8, 6, 6, 5, 5, 4, 4, 3, 3, 2, 1]}, "reason": {"labels": ["実装ミス", "原因不明", "仕様漏れ", "仕様不良", "デザイン漏れ", "実装漏れ", "テスト不良", "調査/検証不足", "仕様変更"], "data": [167, 60, 17, 14, 10, 4, 1, 1, 1]}, "det": {"labels": ["探索的テスト", "(空)", "結合テストケース", "UAT", "デザインレビュー"], "data": [138, 57, 50, 27, 3]}, "short": {"labels": ["結合テスト", "単体テスト", "仕様/設計レビュー", "動作確認", "デザインレビュー", "UAT", "バグではない", "検出不可"], "data": [172, 56, 18, 10, 7, 5, 4, 3]}, "status": {"labels": ["完了", "再テスト完了", "テスト待ち", "未着手"], "data": [236, 32, 4, 3]}, "stack": {"labels": ["スタイル・レイアウト", "文字・文章", "機能不良(その他)", "バリデーション", "画面遷移", "入力フォーム", "データ不整合", "ファイル操作", "表示項目制御", "機能不良(デザインツール)", "認証・認可", "状態管理", "通知", "ユーザビリティ", "エラーハンドリング", "（その他）"], "reasons": ["実装ミス", "原因不明", "仕様漏れ", "仕様不良", "デザイン漏れ", "実装漏れ", "テスト不良", "調査/検証不足"], "matrix": [[8, 43, 4, 0, 8, 0, 0, 0], [7, 16, 2, 0, 1, 0, 0, 0], [17, 0, 4, 0, 0, 2, 0, 0], [16, 0, 2, 1, 1, 1, 0, 0], [20, 0, 0, 0, 0, 0, 0, 0], [17, 0, 2, 0, 0, 0, 0, 0], [13, 0, 1, 0, 0, 0, 0, 0], [12, 0, 0, 0, 0, 0, 0, 0], [11, 0, 0, 0, 0, 0, 0, 0], [9, 0, 0, 0, 0, 1, 0, 0], [3, 0, 0, 5, 0, 0, 0, 0], [5, 0, 0, 3, 0, 0, 0, 0], [6, 0, 0, 0, 0, 0, 0, 0], [6, 0, 0, 0, 0, 0, 0, 0], [4, 0, 0, 1, 0, 0, 0, 0], [13, 1, 2, 4, 0, 0, 1, 1]]}}, "gap": {"late_examples": [{"t": "[管理画面 注文詳細] 手動で注文ステータスを変更すると別の注文になっている", "det": "探索的テスト", "short": "単体テスト"}, {"t": "[EC: ご注文内容確認] ご注文手続きで設定してもお支払い方法が選択されていない状態となってしまう", "det": "探索的テスト", "short": "単体テスト"}, {"t": "[管理画面: 注文一覧] 注文一覧に決済が失敗している注文も表示されている", "det": "探索的テスト", "short": "単体テスト"}, {"t": "[EC: カート] 出荷予定日が正しくない", "det": "結合テストケース", "short": "単体テスト"}], "inc_examples": [{"t": "[ご注文内容確認] ご注文内容を確定ボタンを押下しても、GMO決済管理画面にデータが届いていない可能性がある", "det": "探索的テスト", "short": "結合テスト"}, {"t": "[パスワード再発行] 認証メールが未認証のメールアドレスも、パスワードの再発行ができてしまう", "det": "探索的テスト", "short": "結合テスト"}, {"t": "[ユーザー向けデザインツール] 編集ロックの挙動が正しくない", "det": "探索的テスト", "short": "結合テスト"}, {"t": "[EC・デザインツール] プリセット画像が消えてしまう", "det": "探索的テスト", "short": "結合テスト"}, {"t": "[EC: 新規作成] 古い認証メールにアクセスした後に新しい認証メールにアクセスするとエラーが出る", "det": "探索的テスト", "short": "結合テスト"}]}};
+
+function barChart(id, labels, data, label, horizontal=true) {
+  const ctx = document.getElementById(id);
+  new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label, data, backgroundColor: '#388bfd99', borderColor: '#388bfd', borderWidth: 1 }]},
+    options: {
+      indexAxis: horizontal ? 'y' : 'x',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } },
+        y: { ticks: { color: '#8b949e', autoSkip: true, maxTicksLimit: 24 }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function doughnut(id, labels, data) {
+  const palette = ['#58a6ff','#3fb950','#d29922','#f85149','#a371f7','#79c0ff','#ff7b72','#56d364','#ffa657','#8b949e'];
+  const ctx = document.getElementById(id);
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: labels.map((_,i)=>palette[i%palette.length]),
+        borderColor: '#0f1419',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'right', labels: { color: '#c9d1d9' } }
+      }
+    }
+  });
+}
+
+const ch = REPORT.charts;
+barChart('chartBugcat', ch.bugcat.labels, ch.bugcat.data, '件数', true);
+barChart('chartReason', ch.reason.labels, ch.reason.data, '件数', true);
+barChart('chartDet', ch.det.labels, ch.det.data, '件数', true);
+barChart('chartShort', ch.short.labels, ch.short.data, '件数', true);
+doughnut('chartStatus', ch.status.labels, ch.status.data);
+
+const reasons = ch.stack.reasons;
+const palette2 = ['#58a6ff','#8b949e','#d29922','#f85149','#3fb950','#a371f7','#79c0ff','#ffa657'];
+const datasets = reasons.map((r, idx) => ({
+  label: r,
+  data: ch.stack.matrix.map(row => row[idx]),
+  backgroundColor: palette2[idx % palette2.length] + 'cc',
+  borderColor: '#0f1419',
+  borderWidth: 1
+}));
+new Chart(document.getElementById('chartStack'), {
+  type: 'bar',
+  data: { labels: ch.stack.labels, datasets },
+  options: {
+    responsive: true,
+    scales: {
+      x: { stacked: true, ticks: { color: '#8b949e', maxRotation: 45, minRotation: 25 } },
+      y: { stacked: true, beginAtZero: true, ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }
+    },
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#c9d1d9', boxWidth: 12 } }
+    }
+  }
+});
+</script>
+</body>
+</html>

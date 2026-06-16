@@ -1,22 +1,43 @@
 ---
 name: standard-viewpoints-qa
 description: >-
-  References the company standard test viewpoints when creating test plans or
-  test cases. Use when the user mentions 標準観点, 観点表, テスト観点, テスト計画,
-  test plan, test case creation, or when generating test cases from feature
-  descriptions. When adding viewpoints not in the standard list, outputs
-  proposed new viewpoints in the defined format for later merge into the
-  standard viewpoint table.
+  References the company standard test viewpoints in two phases: (1) high-level
+  test design from requirements (shift-left; which verification is needed per
+  feature), (2) low-level test design and test case creation (gap check, add
+  project-specific viewpoints). Use when the user mentions 標準観点, 観点表,
+  テスト観点, テスト計画, ハイレベルテスト設計, 要件からの検証想定, test
+  plan, test case creation. When adding viewpoints not in the standard list,
+  outputs proposed new viewpoints in the defined format for later merge.
 ---
 
-# 標準観点表を参照したテスト計画・テストケース作成
+# 標準観点表を参照したテスト設計（二段構え）
 
 ## 前提
 
 - 標準観点表は本リポジトリの `viewpoints/` 配下にあり、`viewpoints/{フォルダ名}/{共通|web|アプリ}.md` で格納されている。
-- ワークスペースのルートが親リポジトリの場合は、`standard-viewpoint-table/viewpoints/` または ` standard-viewpoint-table/viewpoints/` を参照する。
+- ワークスペースのルートが親リポジトリの場合は、`standard-viewpoint-table/viewpoints/` を参照する。
 
-## 使い方（観点の参照）
+## フェーズ1: ハイレベルなテスト設計（要件〜上流）
+
+- **入力**: 要件定義や機能一覧など、リポジトリに格納された上流の内容。
+- **手順**:
+  1. 要件から **対象機能**（標準観点の「機能カテゴリ」に相当するもの）を抽出する。
+  2. [reference.md](reference.md) の索引で、その機能に対応する観点ファイル（共通 / web / アプリ）を特定し、Read で読み込む。
+  3. 読み込んだ観点をもとに、「その機能を実装する場合にテスト工程で必要な検証」を整理する（観点カテゴリ・テスト項目レベルでよい）。ハイレベルなテスト設計として出力する。
+  4. 見積もりに使う場合、各観点行に **概算ケース数**（定数・`{{画面数}}` 等のプレースホルダ・単純な式）を載せ、プレースホルダを要件から埋めて **行合算** する。記法・集計の考え方は [../../../docs/概算ケース数の出し方.md](../../../docs/概算ケース数の出し方.md) を参照。厳密計算ではなく早い段階の規模感用。
+- **目的**: 仕様漏れ・考慮漏れの防止。実装前に検証観点を想定しておく。
+
+## フェーズ2: ローレベルなテスト設計・テストケース
+
+- **入力**: ハイレベルなテスト設計、または詳細仕様・画面仕様。
+- **手順**:
+  1. 対象機能とプラットフォーム（共通 / web / アプリ）を特定する。
+  2. [reference.md](reference.md) で該当する .md を特定し、Read で読み込む。
+  3. 既存の詳細テスト設計・テストケースと突き合わせ、**標準観点のカバー漏れ** と **プロジェクト独自で必要な観点の有無** を確認する。必要ならテストケースを追加・追記する。
+  4. 標準にない観点を追加した場合は、[examples.md](examples.md) の「追加観点提案」形式で出力する。
+- **目的**: 詳細観点の抜け漏れ防止、独自観点の見落とし防止。
+
+## 共通: 観点ファイルの読み方
 
 1. **対象機能とプラットフォームを特定する**  
    例: 登録・編集機能 / Web → フォルダ `04-登録・編集`、ファイル `共通.md` と `web.md`。
@@ -27,8 +48,8 @@ description: >-
 3. **該当ファイルを Read で読み込む**  
    必要なのは「共通」＋「web」または「共通」＋「アプリ」の組み合わせ。該当する .md だけを読み、観点一覧の表を取得する。
 
-4. **テスト計画・テストケースに反映する**  
-   読み込んだ観点（テスト観点カテゴリ・テスト項目・確認内容）を、漏れなくテスト計画やテストケースに転用する。表の「確認内容・期待値」をそのままテストポイントとして使ってよい。
+4. **設計・テストケースに反映する**  
+   読み込んだ観点（テスト観点カテゴリ・テスト項目・確認内容）を、漏れなく反映する。表の「確認内容・期待値」をそのままテストポイントとして使ってよい。同一ファイル内に `### テストレベル（単体／結合以降）` がある場合は、そのサブ表に従い **単体用ケースと結合以降用ケースの切り分け**（省略可／必須）をテスト設計に反映する。運用は [../../../docs/テストレベル指針（単体と結合）.md](../../../docs/テストレベル指針（単体と結合）.md) を参照。
 
 ## 追加観点を標準に戻すとき
 
@@ -41,6 +62,8 @@ description: >-
 ## 観点ファイルのスタイル（読み書きするときのルール）
 
 - 観点一覧は4列: 機能 or 表示 / テスト観点カテゴリ / テスト項目（観点）/ 確認内容・期待値。
+- **任意**: プロジェクトのテスト設計シートなどでは **5列目「概算ケース数」** を足してよい。セルには `1` のような定数、`{{画面数}}` のようなプレースホルダ、または `2*{{認証要素数}}` のような単純な式を書き、代入後に行を合算して規模感を出す。ルールは [../../../docs/概算ケース数の出し方.md](../../../docs/概算ケース数の出し方.md)。
+- 必要に応じて、特定の観点ブロック直後に `### テストレベル（単体／結合以降）` のサブ表を置く（単体で主担保できる観点と結合必須観点の切り分け）。観点一覧が複数表に分かれてよい。
 - 編集履歴は各ファイルの **最下部**。1行の形式: 日付 | 変更種別 | 対象観点 | 学び元プロジェクト | 備考。
 - 既存の「共通観点（00-共通から移植）」ブロックは維持する。新規観点は機能固有の表に追加する。
 
@@ -48,3 +71,5 @@ description: >-
 
 - 機能別のファイルパス一覧: [reference.md](reference.md)
 - 追加観点提案の出力例: [examples.md](examples.md)
+- 単体／結合の役割分け: [../../../docs/テストレベル指針（単体と結合）.md](../../../docs/テストレベル指針（単体と結合）.md)
+- 概算ケース数（X列・プレースホルダ）: [../../../docs/概算ケース数の出し方.md](../../../docs/概算ケース数の出し方.md)
