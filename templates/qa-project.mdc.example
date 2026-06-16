@@ -1,0 +1,15 @@
+---
+description: QA Skills 用プロジェクトプロファイル指定。Agent は Skill 実行時に profiles/{id}.yaml を参照する。
+globs:
+alwaysApply: true
+---
+
+# QA プロジェクト設定
+
+- **profile**: `default`（`.cursor/qa-profile.yaml`。setup / sync で配置）
+- **qa-skills.lock**: pin された Skill 版を使用
+
+## Agent 向け指示
+
+1. プロジェクト固有パスは **`.cursor/qa-profile.yaml`** から解決する（Skill 本文のハードコード禁止）
+2. 使用中の Skill 版は `.cursor/qa-skills.lock` を Read する

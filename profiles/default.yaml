@@ -1,0 +1,22 @@
+# 汎用プロジェクトプロファイル（パスは Phase 0 でプロジェクトと合意して上書き）
+project_id: default
+display_name: 汎用プロジェクト
+
+paths:
+  test_plan: "docs/test/00_テスト計画書.md"
+  coverage_index: "docs/test/01_機能×観点カバレッジ表.md"
+  coverage_estimate: "docs/test/03_機能別テスト規模見積.md"
+  viewpoint_common: "docs/test/観点一覧_共通.md"
+  skills_build_dir: null  # 本番と分離しない場合は null
+
+sources:
+  requirements: null  # 例: docs/requirements.csv
+
+conventions:
+  function_id_prefix: []
+  combination_policy: "2-way default"
+  phase2_focus: []
+
+standard_viewpoints:
+  # sync 時に QA repo からの相対パス、または環境変数 QA_VIEWPOINTS_ROOT
+  repo_relative: "standard-viewpoint-table/viewpoints"

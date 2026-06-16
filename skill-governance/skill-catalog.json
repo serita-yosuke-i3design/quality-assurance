@@ -1,0 +1,49 @@
+{
+  "skills": {
+    "test-completion-report": {
+      "version": "1.0.0",
+      "tier": "distributed",
+      "summary": "ISO/IEC/IEEE 29119-3 形式のテスト完了レポート作成"
+    },
+    "viewpoint-coverage-matrix": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "機能×観点カバレッジ表を対話しながら作成・更新（4層・作成中）"
+    },
+    "test-plan-creation": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "テスト計画書（00 形式）を段階的に作成・更新"
+    },
+    "test-case-generation": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "仕様・既存資料からテストケースを段階的に生成"
+    },
+    "test-case-delivery": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "テストケースを計画→設計→L4→トレーサビリティまで一連で作成"
+    },
+    "unit-test-delivery": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "単体テストを計画→実装→カバレッジ評価まで進める"
+    },
+    "e2e-strategy-delivery": {
+      "version": "1.0.0",
+      "tier": "beta",
+      "summary": "E2E 自動テストの計画書・設計書（POM・画面遷移図ベース）"
+    },
+    "standard-viewpoints-qa": {
+      "version": "1.0.0",
+      "tier": "qa-internal",
+      "summary": "社内標準観点表を参照したテスト設計（quality-assurance 専用）"
+    },
+    "standard-viewpoints-add-from-request": {
+      "version": "1.0.0",
+      "tier": "qa-internal",
+      "summary": "標準観点表への観点追加（quality-assurance 専用）"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+# QA Skills Loop engineering ポリシー
+# 詳細: docs/qa-skills-platform-handover.md
+
+lift:
+  healthy_min: 0.15          # これ以上なら健全
+  watch_below: 0.15          # これ未満が2週連続で要監視
+  deprecate_if_negative_weeks: 2  # lift <= 0 が連続した週数
+
+regression:
+  pass_rate_drop_alert: 0.15  # 前回比 -15% でアラート
+
+improve:
+  max_iterations: 3
+  require_human_merge: true
+  max_skill_md_lines_added_per_iter: 30
+
+monitor:
+  schedule: "weekly"          # GitHub Actions cron（Phase 3）
+  smoke_on_skill_pr: true
+
+distribution:
+  default_sync_target: ".cursor/skills"
+  lock_file: ".cursor/qa-skills.lock"
+
+autonomy:
+  ai_may:
+    - run_evals
+    - grade_assertions
+    - aggregate_benchmark
+    - create_github_issue
+    - open_draft_pr
+  human_must:
+    - merge_skill_md
+    - deprecate_or_delete_skill
+    - change_eval_policy
+    - upgrade_project_lock

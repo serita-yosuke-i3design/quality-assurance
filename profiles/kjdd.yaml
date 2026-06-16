@@ -1,0 +1,41 @@
+# KJDD プロジェクトプロファイル
+# Skill 本文にパスを書かず、本ファイルを正とする
+project_id: kjdd
+display_name: KJDD（キングジム向けシステム）
+
+paths:
+  test_plan_dir: "20_作成資料/テスト/【テスト計画】"
+  test_plan: "20_作成資料/テスト/【テスト計画】/00_テスト計画書.md"
+  coverage_index: "20_作成資料/テスト/【テスト計画】/01_機能×観点カバレッジ表.md"
+  coverage_estimate: "20_作成資料/テスト/【テスト計画】/03_機能別テスト規模見積.md"
+  coverage_eval: "20_作成資料/テスト/【テスト計画】/02_観点カバレッジ評価表.md"
+  viewpoint_common: "20_作成資料/テスト/【テスト計画】/観点一覧_共通.md"
+  coverage_matrix_l3_prefix: "20_作成資料/テスト/【テスト計画】/01"
+  decisions: "20_作成資料/テスト/【テスト計画】/決定が必要な項目.md"
+  confirmations: "20_作成資料/テスト/【テスト計画】/確認事項一覧.md"
+  skills_build_dir: "20_作成資料/テスト/【テスト計画書（Skills構築用）】"
+  test_readme: "20_作成資料/テスト/README.md"
+  qa_viewpoints_doc: "20_作成資料/テスト/【テスト計画】/観点カバレッジ表_3系統化_QA見解.md"
+
+sources:
+  requirements: "function_requirements.csv"
+  ec_cases: "20_作成資料/テスト/【テスト項目表】/28_EC_別ソース"
+  admin_cases: "20_作成資料/テスト/【テスト項目表】/25_管理画面"
+  dt_cases: "20_作成資料/テスト/【テスト項目表】/27_デザインツール"
+
+conventions:
+  function_id_prefix: ["EC-", "AD-", "CD-"]
+  combination_policy: "2-way default, 3-way for high-risk (C×I >= 20 or L1 高/高)"
+  phase2_focus:
+    - "EC購入・決済"
+    - "管理画面の状態・データ整合"
+  coverage_philosophy: "合格率目標より機能×観点カバレッジの可視化"
+
+standard_viewpoints:
+  repo_relative: "standard-viewpoint-table/viewpoints"
+  # プロジェクトのみ開いている場合: QA repo を clone し QA_VIEWPOINTS_ROOT を設定
+
+artifact_metadata:
+  # 成果物ヘッダに追記する行のテンプレート
+  skill_version_line: "**作成 Skill**: {skill_name}@{version}"
+  created_date_line: "**作成日**: {date}"

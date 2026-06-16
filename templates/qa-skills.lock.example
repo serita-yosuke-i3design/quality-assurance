@@ -1,0 +1,13 @@
+# 配布対象の例（distributed のみ）
+# 実際の lock は setup が skill-catalog から生成する
+# beta を含める例: ./scripts/setup-qa-skills.sh ../project --include-beta
+
+platform: quality-assurance
+platform_repo: git@github.com:serita-yosuke-i3design/quality-assurance.git
+
+skills:
+  test-completion-report: "1.0.0"
+
+synced_at: null
+qa_repo_ref: main
+profile: default
